@@ -3,6 +3,7 @@
 #include <string.h>
 
 void gnome_sort(int[], int);
+void gnome_sort_memoization(int[], int);
 void print_array(int[], int);
 void swap(int*, int*);
 
@@ -17,7 +18,7 @@ int main() {
     // Selection Sort Min
     memcpy(arr, original_arr, sizeof(original_arr));
     printf("Gnome Sort:\n");
-    gnome_sort(arr, arr_size);
+    gnome_sort_memoization(arr, arr_size);
     print_array(arr, arr_size);
 
     return 0;
@@ -31,6 +32,29 @@ void gnome_sort(int arr[], int size){
             swap(&arr[x], &arr[x - 1]);
             x--;
         }else{
+            x++;
+        }
+    }
+}
+
+void gnome_sort_memoization(int arr[], int size){
+    int x = 1, prev = 0;
+    
+    while (x < size){
+        if (x > 0 && arr[x] < arr[x - 1]){
+            swap(&arr[x], &arr[x - 1]);
+
+            if (prev == 0){
+                prev = x;
+            }
+           
+            x--;
+        }else{
+            if (x == 0){
+                x = prev;
+                prev = 0;
+            }
+           
             x++;
         }
     }
