@@ -20,8 +20,9 @@ void array_to_ll(int[], int, List*);
 int main() {
     List ll = NULL;
 
-    int original_arr[] = {10, 21, 83, 45, 67, 30, 30, 27, 91, 74, 15, 105, 231, 31, 44, 67};
-    int arr[] = {10, 21, 83, 45, 67, 30, 30, 27, 91, 74, 15, 105, 231, 31, 44, 67};
+    // Changed just to better split into buckets
+    int original_arr[] = {10, 21, 83, 45, 67, 30, 30, 27, 91, 74, 15, 105, 121, 31, 44, 67};
+    int arr[] = {10, 21, 83, 45, 67, 30, 30, 27, 91, 74, 15, 105, 121, 31, 44, 67};
     int arr_size = sizeof(arr) / sizeof(arr[0]);
     
     printf("Original Array:\n");
@@ -63,12 +64,17 @@ void bucket_sort(int arr[], int size){
         }
 
         for(x = 0; x < NUM_BUCKETS; x++){
-            List trav;
+            List trav = buckets[x];
 
-            for(trav = buckets[x]; trav != NULL; trav = trav -> next){
+            while(trav != NULL){
                 arr[y++] = trav -> data;
+                List temp = trav;
+                trav = trav -> next;
+                free(temp);
             }
         }
+
+        free(buckets);
     }    
 }
 

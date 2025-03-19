@@ -47,8 +47,6 @@ void merge(int arr[], int left, int middle, int right){
         arr[z++] = (temp_arr[x] < temp_arr_2[y] ? temp_arr[x++] : temp_arr_2[y++]);
     }
 
-    int *remaining_arr = temp_arr;
-    
     while (x < size){
         arr[z++] = temp_arr[x++];
     }
