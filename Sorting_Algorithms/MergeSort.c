@@ -1,11 +1,16 @@
 // Online C compiler to run C program online
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
+
+
+typedef char* String;
 
 void merge(int[], int, int, int);
-void merge_sort(int[], int, int);
+void merge_sort(int[], int, int, String);
 void print_array(int[], int);
 void swap(int*, int*);
+int min(int, int);
 
 int main() {
     int original_arr[] = {10, 21, 83, 45, 67, 30, 30, 27, 91, 74, 15, 105, 231, 31, 44, 67};
@@ -15,11 +20,17 @@ int main() {
     printf("Original Array:\n");
     print_array(arr, arr_size);
     
-    // Merge Sort
+    // Merge Sort - Top Down
     memcpy(arr, original_arr, sizeof(original_arr));
-    printf("Merge Sort:\n");
-    merge_sort(arr, 0, arr_size - 1);
+    printf("Merge Sort (Top Down):\n");
+    merge_sort(arr, 0, arr_size - 1, "topdown");
     print_array(arr, arr_size);
+
+      // Merge Sort - Bottom Up
+      memcpy(arr, original_arr, sizeof(original_arr));
+      printf("Merge Sort (Bottom Up):\n");
+      merge_sort(arr, 0, arr_size - 1, "bottomup");
+      print_array(arr, arr_size);
 
 
     return 0;
@@ -57,14 +68,29 @@ void merge(int arr[], int left, int middle, int right){
 }
 
 
-void merge_sort(int arr[], int left, int right){
+void merge_sort(int arr[], int left, int right, String type){
     if (left < right){
-        int middle = (left + right) / 2;
+        if (strcmp(type, "topdown") == 0){
+            int middle = (left + right) / 2;
 
-        merge_sort(arr, left, middle);
-        merge_sort(arr, middle + 1, right);
+            merge_sort(arr, left, middle, type);
+            merge_sort(arr, middle + 1, right, type);
 
-        merge(arr, left, middle, right);
+            merge(arr, left, middle, right);
+        }else{
+            int cur_size, size = right + 1;
+            for (int cur_size = 1; cur_size < size; cur_size *= 2) {
+                for (int left_start = left; left_start < right; left_start += 2 * cur_size) {
+                    int mid = min(left_start + cur_size - 1, right);
+                    int right_end = min(left_start + 2 * cur_size - 1, right);
+    
+                    if (mid < right_end) {
+                        merge(arr, left_start, mid, right_end);
+                    }
+                }
+            }
+        }
+        
     }
 }
 
@@ -83,4 +109,8 @@ void swap(int *a, int *b){
     int temp = *a;
     *a = *b;
     *b = temp;
+}
+
+int min(int a, int b) {
+    return (a < b) ? a : b;
 }
